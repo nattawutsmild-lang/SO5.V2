@@ -73,57 +73,34 @@
     <section id="tab-data" class="tab" hidden>
 
       <div class="card">
-        <h2>เชื่อม Google Sheets</h2>
-        <p class="subtle">วางลิงก์ CSV ที่เผยแพร่จาก Google Sheets แยกตามกะ แล้วกด “ดึงข้อมูล” ระบบจะเพิ่มรายการใหม่หรืออัปเดตรายการเดิมอัตโนมัติ (ไม่ต้องใส่ “รับเข้า”, “เวลาที่ต้องเปิด” หรือ “เวลาที่ถึงสาย” ในชีต — ระบบคำนวณให้เอง)</p>
+        <div class="toolbar" style="justify-content:space-between;align-items:flex-start">
+          <div><h2>เชื่อม Google Sheets</h2><p class="subtle">วางลิงก์ CSV ที่เผยแพร่จาก Google Sheets แยกตามกะ — ระบบจะบันทึกลิงก์และดึงข้อมูลให้ทันทีที่วาง เหมือนฝังลิงก์สด ไม่ต้องกดบันทึกหรือดึงข้อมูลเองทุกครั้ง (ไม่ต้องใส่ “รับเข้า”, “เวลาที่ต้องเปิด” หรือ “เวลาที่ถึงสาย” ในชีต — ระบบคำนวณให้เอง)</p></div>
+          <label style="display:flex;align-items:center;gap:6px;width:auto;margin:0;font-size:12px;color:var(--muted);white-space:nowrap"><input id="autoSync" type="checkbox" style="width:auto;margin:0" checked> ซิงก์อัตโนมัติทุก 2 นาที</label>
+        </div>
         <div class="grid"><div><label for="sheetUrlS1">ลิงก์ CSV กะ 16:00–01:00</label><input id="sheetUrlS1" type="url" placeholder="https://docs.google.com/...output=csv"></div><div><label for="sheetUrlS2">ลิงก์ CSV กะ 22:00–07:00</label><input id="sheetUrlS2" type="url" placeholder="https://docs.google.com/...output=csv"></div></div>
-        <div class="buttons" style="margin-top:4px"><button id="saveSheetLinks" class="btn secondary" type="button">บันทึกลิงก์ในเครื่องนี้</button><button id="syncSheets" class="btn" type="button">ดึงข้อมูลจาก Google Sheets</button></div>
+        <div class="buttons" style="margin-top:4px;justify-content:space-between"><button id="syncSheets" class="btn" type="button">ซิงก์ตอนนี้</button><span id="syncStatus" class="subtle" style="margin:0">ยังไม่เคยซิงก์</span></div>
       </div>
 
       <div class="card">
-        <h2 id="formTitle">บันทึกข้อมูลรถ (ทีละคัน)</h2>
-        <form id="recordForm">
-          <div class="grid">
-            <div><label for="fDate">วันที่</label><input id="fDate" type="date" required></div>
-            <div><label for="fShift">กะ</label><select id="fShift"></select></div>
-            <div><label for="fOrder">ลำดับ</label><input id="fOrder" type="number" min="0" placeholder="1"></div>
-            <div><label for="fBarcode">1. บาร์โค้ดรถ</label><input id="fBarcode" placeholder="URT1URGX45"></div>
-          </div>
-          <label for="fRoute">2. เส้นทางเดินรถ <span class="subtle">(นำหน้าด้วย DD1 สำหรับรถเสริม)</span></label><input id="fRoute" placeholder="เช่น LH-6W7.2-S01-S05-13:00-R0 หรือ DD1-...">
-          <div class="grid">
-            <div><label for="fType">3. ประเภท</label><select id="fType"><option value="ปลายทาง">ปลายทาง</option><option value="จุดดร็อป">จุดดร็อป</option></select></div>
-            <div><label for="fExpected">4. เวลาที่คาดว่าจะถึง</label><input id="fExpected" type="datetime-local"></div>
-            <div><label for="fSize">5. ขนาดรถ</label><select id="fSize"><option value="4W">4W</option><option value="4WJ">4WJ</option><option value="6W5.5">6W5.5</option><option value="6W7.2">6W7.2</option><option value="6W8.8">6W8.8</option><option value="22W">22W</option></select></div>
-            <div><label for="fPlate">6. ทะเบียน</label><input id="fPlate" placeholder="708199 (สุพรรณบุรี)"></div>
-          </div>
-          <label for="fDriver">7. ชื่อพนักงานขับ (เบอร์โทร)</label><input id="fDriver" placeholder="ชื่อพนักงาน (0812345678)">
-          <div class="grid">
-            <div><label for="fStatus">8. สถานะรถ</label><select id="fStatus"></select></div>
-            <div><label for="fParcel">9. จำนวนพัสดุ</label><input id="fParcel" type="number" min="0" placeholder="0"></div>
-            <div><label for="fSack">10. กระสอบ</label><input id="fSack" type="number" min="0" placeholder="0"></div>
-            <div><label for="fDrop">จำนวนหลุด</label><input id="fDrop" type="number" min="0" placeholder="0"></div>
-          </div>
-          <div class="grid">
-            <div><label for="fActual">11. เวลามาถึงจริง</label><input id="fActual" type="datetime-local"></div>
-          </div>
-          <p class="subtle">รับเข้า / เวลาที่ต้องเปิด / เวลาที่ถึงสาย / สถานะ(รถ) จะคำนวณให้อัตโนมัติจากข้อมูลด้านบน และแสดงที่หน้าสรุป</p>
-          <div class="buttons"><button class="btn" type="submit">บันทึก</button><button id="cancelEdit" class="btn secondary" type="button" hidden>ยกเลิกแก้ไข</button></div>
-        </form>
-      </div>
-
-      <div class="card">
-        <h2>วางข้อมูลหลายคันพร้อมกัน</h2>
-        <p class="subtle">คัดลอกจาก Excel หรือ Google Sheets แล้ววาง 1 แถวต่อ 1 คัน เรียงคอลัมน์: ลำดับ, บาร์โค้ด, เส้นทาง, ประเภท, เวลาคาดถึง, ขนาด, ทะเบียน, คนขับ(เบอร์), สถานะ, พัสดุ, กระสอบ, หลุด, เวลามาถึงจริง</p>
-        <div class="grid"><div><label for="bDate">วันที่</label><input id="bDate" type="date"></div><div><label for="bShift">กะ</label><select id="bShift"></select></div></div>
-        <label for="bulkInput">ข้อมูลรถ</label><textarea id="bulkInput" rows="6" placeholder="1&#9;URT1URGX45&#9;DD1-6W5.5-BURT-S05&#9;ปลายทาง&#9;2026-11-03 08:30&#9;6W5.5&#9;708199&#9;ชื่อ(เบอร์)&#9;กำลังโหลด&#9;100&#9;5&#9;0&#9;2026-11-03 09:00"></textarea>
-        <div class="buttons"><button id="parseBulk" class="btn" type="button">ตรวจสอบข้อมูล</button><button id="clearBulk" class="btn secondary" type="button">ล้างช่อง</button></div>
-        <div id="bulkPreview" hidden><h2 style="margin-top:16px">ตรวจสอบก่อนบันทึก (<span id="bulkCount">0</span> คัน)</h2><div class="table-wrap"><table style="min-width:0"><thead><tr><th>ลำดับ</th><th>บาร์โค้ด</th><th>เส้นทาง</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="bulkBody"></tbody></table></div><div class="buttons" style="margin-top:10px"><button id="saveBulk" class="btn" type="button">บันทึกทั้งหมด</button></div></div>
-      </div>
-
-      <div class="card">
-        <div class="toolbar" style="justify-content:space-between"><h2>รายการทั้งหมด / แก้ไข-ลบ</h2><div class="buttons"><button id="importButton" class="btn secondary" type="button">นำเข้าไฟล์ (JSON/CSV)</button></div></div>
-        <div class="toolbar"><div><label for="listDate">กรองวันที่</label><input id="listDate" type="date"></div><div><label for="listShift">กรองกะ</label><select id="listShift"></select></div><div class="wide"><label for="listSearch">ค้นหา</label><input id="listSearch" placeholder="บาร์โค้ด, เส้นทาง, ทะเบียน หรือคนขับ"></div><div><button id="listClear" class="btn secondary" type="button">ล้างตัวกรอง</button></div></div>
-        <div class="table-wrap"><table style="min-width:0"><thead><tr><th>ลำดับ</th><th>วันที่</th><th>กะ</th><th>บาร์โค้ด</th><th>เส้นทาง</th><th>สถานะรถ</th><th>จัดการ</th></tr></thead><tbody id="listBody"></tbody></table></div>
-        <div id="listEmpty" class="empty">ยังไม่มีข้อมูลตามเงื่อนไขที่เลือก</div>
+        <div class="toolbar" style="justify-content:space-between">
+          <div><h2>ตารางกรอกข้อมูล (แบบ Excel)</h2><p class="subtle">พิมพ์ในช่องได้ทันที กด Tab/Enter เพื่อไปช่องถัดไป หรือ "วาง" ข้อมูลจาก Excel/Google Sheets ลงในช่องใดก็ได้ ระบบจะกระจายค่าไปตามแถว-คอลัมน์ให้อัตโนมัติเหมือนวางใน Excel ทุกการแก้ไขบันทึกทันที</p></div>
+          <div class="buttons"><button id="importButton" class="btn secondary" type="button">นำเข้าไฟล์ (JSON/CSV)</button></div>
+        </div>
+        <div class="toolbar">
+          <div><label for="gridDate">วันที่ (สำหรับแถวใหม่ + กรอง)</label><input id="gridDate" type="date"></div>
+          <div><label for="gridShift">กะ (สำหรับแถวใหม่ + กรอง)</label><select id="gridShift"></select></div>
+          <div class="wide"><label for="gridSearch">ค้นหา</label><input id="gridSearch" placeholder="บาร์โค้ด, เส้นทาง, ทะเบียน หรือคนขับ"></div>
+          <div><button id="addRow" class="btn" type="button">+ เพิ่มแถว</button></div>
+        </div>
+        <div class="table-wrap">
+          <table id="gridTable">
+            <thead><tr>
+              <th>ลำดับ</th><th>บาร์โค้ดรถ</th><th>เส้นทางเดินรถ</th><th>ประเภท</th><th>เวลาที่คาดว่าจะถึง</th><th>ขนาดรถ</th><th>ทะเบียน</th><th>ชื่อพนักงานขับ(เบอร์)</th><th>สถานะรถ</th><th>พัสดุ</th><th>กระสอบ</th><th>หลุด</th><th>เวลามาถึงจริง</th><th>รับเข้า</th><th>ต้องเปิด</th><th>ถึงสาย</th><th>สถานะ(รถ)</th><th></th>
+            </tr></thead>
+            <tbody id="gridBody"></tbody>
+          </table>
+        </div>
+        <div id="gridEmpty" class="empty">ยังไม่มีแถวข้อมูล กด “+ เพิ่มแถว” หรือวางข้อมูลจาก Excel เพื่อเริ่มกรอก</div>
       </div>
 
     </section>
@@ -142,7 +119,8 @@
     const SIZES = ['4W','4WJ','6W5.5','6W7.2','6W8.8','22W'];
     const BUFFER_SIZES = ['6W5.5','6W7.2','4W','4WJ']; // ขนาดที่ได้บัฟเฟอร์ 2 ชม. ก่อนต้องเปิด
     const FIELDS = ['date','shift','order','barcode','route','type','size','plate','driver','status','parcel','sack','drop','expected','actual'];
-    let records = [], editingId = null, bulkRows = [], noticeTimer;
+    const FIELD_ORDER = ['date','shift','order','barcode','route','type','expected','size','plate','driver','status','parcel','sack','drop','actual']; // ลำดับคอลัมน์ในตาราง ใช้กระจายค่าตอนวาง (paste) แบบ Excel
+    let records = [], noticeTimer;
     const $ = id => document.getElementById(id);
     const today = () => { const d = new Date(); const m = String(d.getMonth()+1).padStart(2,'0'); return `${d.getFullYear()}-${m}-${String(d.getDate()).padStart(2,'0')}`; };
     const uid = () => { const random = globalThis.crypto?.getRandomValues ? crypto.getRandomValues(new Uint32Array(1))[0].toString(36) : Math.random().toString(36).slice(2); return `t_${Date.now()}_${random}`; };
@@ -205,32 +183,131 @@
 
     function acceptBadge(r) { const v = acceptOf(r); return `<span class="badge ${v === 'รับเข้าแล้ว' ? 'good' : 'warn'}">${v}</span>`; }
     function compareBadge(r) { const v = statusCompareOf(r); if (!v) return '<span class="badge muted">-</span>'; return `<span class="badge ${v === 'ถึงล่าช้า' ? 'bad' : 'good'}">${v}</span>`; }
-    const badge = status => `<span class="badge ${isDone({status}) ? 'good' : status === 'กำลังโหลด' ? 'warn' : ''}">${esc(status || '-')}</span>`;
 
     function selectOptions(element, includeAll = false) { element.innerHTML = `${includeAll ? '<option value="">ทั้งหมด</option>' : ''}${SHIFTS.map(s => `<option value="${s}">${s}</option>`).join('')}`; }
-    function statusOptions(element) { element.innerHTML = STATUSES.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function show(message, type = 'ok') { const el = $('notice'); clearTimeout(noticeTimer); el.textContent = message; el.className = `notice ${type}`; noticeTimer = setTimeout(() => { el.className = 'notice'; }, 5000); }
     function normalize(value) { const raw = value && typeof value === 'object' ? value : {}; const out = {}; FIELDS.forEach(k => out[k] = raw[k] == null ? '' : String(raw[k]).trim()); out.id = typeof raw.id === 'string' && raw.id ? raw.id : uid(); out.updatedAt = Number(raw.updatedAt) || Date.now(); out.date = /^\d{4}-\d{2}-\d{2}$/.test(out.date) ? out.date : today(); out.shift = SHIFTS.includes(out.shift) ? out.shift : SHIFTS[0]; out.status = STATUSES.includes(out.status) ? out.status : STATUSES[0]; out.type = TYPES.includes(out.type) ? out.type : TYPES[0]; return out; }
     function load() { try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); records = Array.isArray(saved) ? saved.map(normalize) : []; } catch { records = []; show('ไม่สามารถอ่านข้อมูลเดิมได้ จึงเริ่มรายการใหม่', 'error'); } }
-    function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); renderList(); renderOverview(); return true; } catch { show('บันทึกข้อมูลในเบราว์เซอร์ไม่สำเร็จ', 'error'); return false; } }
+    function persist() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); return true; } catch { show('บันทึกข้อมูลในเบราว์เซอร์ไม่สำเร็จ', 'error'); return false; } }
+    function save() { const ok = persist(); renderGrid(); renderOverview(); return ok; }
+    let autoSyncTimer = null;
     function loadSheetLinks() { try { const saved = JSON.parse(localStorage.getItem(SHEET_LINKS_KEY) || '{}'); return { s1:String(saved.s1 || ''), s2:String(saved.s2 || '') }; } catch { return {s1:'',s2:''}; } }
     function readSheetLinks() { return {s1:$('sheetUrlS1').value.trim(), s2:$('sheetUrlS2').value.trim()}; }
-    function saveSheetLinks() { const links = readSheetLinks(); try { Object.values(links).filter(Boolean).forEach(url => { const parsed = new URL(url); if (parsed.protocol !== 'https:') throw new Error('ต้องเป็นลิงก์ https'); }); localStorage.setItem(SHEET_LINKS_KEY, JSON.stringify(links)); show('บันทึกลิงก์ Google Sheets ในเครื่องนี้แล้ว'); return true; } catch { show('โปรดวางลิงก์ https ที่ถูกต้อง', 'error'); return false; } }
-    function switchTab(tab) { document.querySelectorAll('.tab').forEach(el => el.hidden = el.id !== `tab-${tab}`); document.querySelectorAll('nav button').forEach(el => el.classList.toggle('active', el.dataset.tab === tab)); if (tab === 'data') { renderList(); if (!$('bDate').value) $('bDate').value = today(); } if (tab === 'overview') renderOverview(); window.scrollTo({top:0, behavior:'smooth'}); }
-    function resetForm() { editingId = null; $('formTitle').textContent = 'บันทึกข้อมูลรถ (ทีละคัน)'; $('cancelEdit').hidden = true; $('recordForm').reset(); $('fDate').value = today(); $('fShift').value = SHIFTS[0]; $('fStatus').value = STATUSES[0]; $('fType').value = TYPES[0]; $('fSize').value = SIZES[0]; }
-    function formData() { return normalize({ id:editingId || uid(), date:$('fDate').value, shift:$('fShift').value, order:$('fOrder').value, barcode:$('fBarcode').value, route:$('fRoute').value, type:$('fType').value, size:$('fSize').value, plate:$('fPlate').value, expected:$('fExpected').value, driver:$('fDriver').value, status:$('fStatus').value, parcel:$('fParcel').value, sack:$('fSack').value, drop:$('fDrop').value, actual:$('fActual').value, updatedAt:Date.now() }); }
-    function edit(id) { const record = records.find(r => r.id === id); if (!record) return; editingId = id; $('formTitle').textContent = 'แก้ไขข้อมูลรถ'; $('cancelEdit').hidden = false; const map = {date:'fDate',shift:'fShift',order:'fOrder',barcode:'fBarcode',route:'fRoute',type:'fType',size:'fSize',plate:'fPlate',expected:'fExpected',driver:'fDriver',status:'fStatus',parcel:'fParcel',sack:'fSack',drop:'fDrop',actual:'fActual'}; Object.entries(map).forEach(([key,id]) => $(id).value = record[key] || ''); switchTab('data'); }
+    function quietSaveLinks() { const links = readSheetLinks(); try { Object.values(links).filter(Boolean).forEach(url => { const parsed = new URL(url); if (parsed.protocol !== 'https:') throw new Error('ต้องเป็นลิงก์ https'); }); localStorage.setItem(SHEET_LINKS_KEY, JSON.stringify(links)); return true; } catch { return false; } }
+    function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
+    function updateSyncStatus(date, errorMsg) { const el = $('syncStatus'); if (!el) return; if (errorMsg) el.textContent = `ซิงก์ล่าสุดล้มเหลว: ${errorMsg}`; else if (date) el.textContent = `ซิงก์ล่าสุด ${date.toLocaleTimeString('th-TH')}`; else el.textContent = 'ยังไม่เคยซิงก์'; }
+    function restartAutoSyncTimer() { clearInterval(autoSyncTimer); autoSyncTimer = null; if ($('autoSync').checked) autoSyncTimer = setInterval(() => syncGoogleSheets(true), 120000); }
+    const autoSyncOnEdit = debounce(() => { if (quietSaveLinks()) syncGoogleSheets(true); restartAutoSyncTimer(); }, 900);
+    function switchTab(tab) { document.querySelectorAll('.tab').forEach(el => el.hidden = el.id !== `tab-${tab}`); document.querySelectorAll('nav button').forEach(el => el.classList.toggle('active', el.dataset.tab === tab)); if (tab === 'data') renderGrid(); if (tab === 'overview') renderOverview(); window.scrollTo({top:0, behavior:'smooth'}); }
+    function edit(id) {
+      const record = records.find(r => r.id === id); if (!record) return;
+      switchTab('data');
+      $('gridDate').value = record.date; $('gridShift').value = record.shift; $('gridSearch').value = '';
+      renderGrid();
+      requestAnimationFrame(() => {
+        const row = document.querySelector(`#gridBody tr[data-row="${CSS.escape(id)}"]`);
+        if (!row) return;
+        row.scrollIntoView({behavior:'smooth', block:'center'});
+        row.style.outline = '2px solid var(--primary)';
+        setTimeout(() => { row.style.outline = ''; }, 1600);
+        const input = row.querySelector('[data-field="barcode"]'); if (input) input.focus();
+      });
+    }
     function remove(id) { const record = records.find(r => r.id === id); if (!record || !confirm(`ยืนยันการลบรถ ${record.barcode || record.route || ''} ?`)) return; records = records.filter(r => r.id !== id); save(); show('ลบรายการสำเร็จ'); }
     function updateStatus(id, status) { const row = records.find(r => r.id === id); if (!row || !STATUSES.includes(status)) return; row.status = status; row.updatedAt = Date.now(); save(); show('อัปเดตสถานะสำเร็จ'); }
     function rowActions(id) { return `<div class="actions"><button class="btn secondary small" type="button" data-edit="${esc(id)}">แก้ไข</button><button class="btn danger small" type="button" data-delete="${esc(id)}">ลบ</button></div>`; }
     function statusSelect(id, value) { return `<select aria-label="สถานะ" data-status-id="${esc(id)}" class="status-change" style="width:auto;margin:0;padding:4px 6px">${STATUSES.map(s => `<option value="${s}" ${s === value ? 'selected' : ''}>${s}</option>`).join('')}</select>`; }
     function matches(row, query) { const q = query.trim().toLowerCase(); return !q || [row.barcode,row.route,row.plate,row.driver].some(v => String(v || '').toLowerCase().includes(q)); }
 
-    function renderList() {
-      const date = $('listDate').value, shift = $('listShift').value, query = $('listSearch').value;
-      const rows = sortRecords(records.filter(r => (!date || r.date === date) && (!shift || r.shift === shift) && matches(r, query)));
-      $('listBody').innerHTML = rows.map(r => `<tr><td>${esc(r.order || '-')} ${isDD1(r.route) ? '<span class="badge warn">เสริม</span>' : ''}</td><td>${esc(r.date)}</td><td>${esc(r.shift)}</td><td>${esc(r.barcode || '-')}</td><td>${esc(r.route || '-')}</td><td>${statusSelect(r.id,r.status)}</td><td>${rowActions(r.id)}</td></tr>`).join('');
-      $('listEmpty').style.display = rows.length ? 'none' : 'block';
+    // ---------- ตารางกรอกข้อมูลแบบ Excel (หน้าใส่ข้อมูล) ----------
+    function cellInput(id, field, value, type) { return `<input type="${type || 'text'}" value="${esc(value)}" data-id="${esc(id)}" data-field="${field}" style="margin:0;min-width:90px">`; }
+    function cellSelect(id, field, options, value) { return `<select data-id="${esc(id)}" data-field="${field}" style="margin:0;min-width:90px">${options.map(o => `<option value="${esc(o)}" ${o === value ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`; }
+    function buildGridRow(r) {
+      return `<tr data-row="${esc(r.id)}">
+        <td>${cellInput(r.id,'date',r.date,'date')}</td>
+        <td>${cellSelect(r.id,'shift',SHIFTS,r.shift)}</td>
+        <td style="min-width:56px">${cellInput(r.id,'order',r.order,'number')}</td>
+        <td>${cellInput(r.id,'barcode',r.barcode)}</td>
+        <td><span class="dd-badge">${isDD1(r.route) ? '<span class="badge warn">เสริม</span> ' : ''}</span>${cellInput(r.id,'route',r.route)}</td>
+        <td>${cellSelect(r.id,'type',TYPES,r.type)}</td>
+        <td>${cellInput(r.id,'expected',r.expected,'datetime-local')}</td>
+        <td>${cellSelect(r.id,'size',SIZES,r.size)}</td>
+        <td>${cellInput(r.id,'plate',r.plate)}</td>
+        <td>${cellInput(r.id,'driver',r.driver)}</td>
+        <td>${cellSelect(r.id,'status',STATUSES,r.status)}</td>
+        <td style="min-width:56px">${cellInput(r.id,'parcel',r.parcel,'number')}</td>
+        <td style="min-width:56px">${cellInput(r.id,'sack',r.sack,'number')}</td>
+        <td style="min-width:56px">${cellInput(r.id,'drop',r.drop,'number')}</td>
+        <td>${cellInput(r.id,'actual',r.actual,'datetime-local')}</td>
+        <td data-computed="accept">${acceptBadge(r)}</td>
+        <td data-computed="mustopen">${esc(calcMustOpen(r.expected,r.type,r.size) || '-')}</td>
+        <td data-computed="late">${esc(lateDiffOf(r) || '-')}</td>
+        <td data-computed="compare">${compareBadge(r)}</td>
+        <td><button type="button" class="btn danger small" data-grid-delete="${esc(r.id)}">ลบ</button></td>
+      </tr>`;
+    }
+    function gridRows() { const date = $('gridDate').value, shift = $('gridShift').value, query = $('gridSearch').value; return sortRecords(records.filter(r => (!date || r.date === date) && (!shift || r.shift === shift) && matches(r, query))); }
+    function renderGrid() { const rows = gridRows(); $('gridBody').innerHTML = rows.map(buildGridRow).join(''); $('gridEmpty').style.display = rows.length ? 'none' : 'block'; }
+    function updateRowComputed(id) {
+      const r = records.find(x => x.id === id); if (!r) return;
+      const tr = document.querySelector(`#gridBody tr[data-row="${CSS.escape(id)}"]`); if (!tr) return;
+      const dd = tr.querySelector('.dd-badge'); if (dd) dd.innerHTML = isDD1(r.route) ? '<span class="badge warn">เสริม</span> ' : '';
+      const accept = tr.querySelector('[data-computed="accept"]'); if (accept) accept.innerHTML = acceptBadge(r);
+      const mustopen = tr.querySelector('[data-computed="mustopen"]'); if (mustopen) mustopen.textContent = calcMustOpen(r.expected,r.type,r.size) || '-';
+      const late = tr.querySelector('[data-computed="late"]'); if (late) late.textContent = lateDiffOf(r) || '-';
+      const compare = tr.querySelector('[data-computed="compare"]'); if (compare) compare.innerHTML = compareBadge(r);
+    }
+    function commitCell(id, field, value) {
+      const r = records.find(x => x.id === id); if (!r) return;
+      r[field] = value;
+      if (field === 'shift' && !SHIFTS.includes(r.shift)) r.shift = SHIFTS[0];
+      if (field === 'date' && !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) r.date = today();
+      if (field === 'type' && !TYPES.includes(r.type)) r.type = TYPES[0];
+      r.updatedAt = Date.now();
+      persist();
+      if (field === 'date' || field === 'shift') renderGrid(); else updateRowComputed(id);
+      renderOverview();
+    }
+    function addGridRow() {
+      const record = normalize({ date:$('gridDate').value || today(), shift:$('gridShift').value || SHIFTS[0], status:STATUSES[0], type:TYPES[0], size:SIZES[0] });
+      records.push(record); save();
+      requestAnimationFrame(() => { const input = document.querySelector(`#gridBody tr[data-row="${CSS.escape(record.id)}"] [data-field="barcode"]`); if (input) input.focus(); });
+    }
+    function handleGridPaste(event) {
+      const target = event.target; if (!target.matches('[data-field]')) return;
+      const clip = event.clipboardData || window.clipboardData; if (!clip) return;
+      const text = clip.getData('text/plain'); if (!text) return;
+      const lines = text.replace(/\r/g,'').split('\n'); if (lines.length && lines[lines.length - 1] === '') lines.pop();
+      const grid = lines.map(parseLine);
+      if (grid.length <= 1 && grid[0] && grid[0].length <= 1) return; // แค่ค่าเดียว ปล่อยให้วางตามปกติ
+      event.preventDefault();
+      const startCol = FIELD_ORDER.indexOf(target.dataset.field); if (startCol === -1) return;
+      const rowEls = Array.from($('gridBody').querySelectorAll('tr'));
+      const displayedIds = rowEls.map(tr => tr.dataset.row);
+      let startRow = displayedIds.indexOf(target.closest('tr')?.dataset.row); if (startRow === -1) startRow = 0;
+      grid.forEach((rowVals, r) => {
+        let id = displayedIds[startRow + r], record = id ? records.find(x => x.id === id) : null;
+        if (!record) { record = normalize({ date:$('gridDate').value || today(), shift:$('gridShift').value || SHIFTS[0] }); records.push(record); displayedIds.push(record.id); }
+        rowVals.forEach((val, c) => {
+          const field = FIELD_ORDER[startCol + c]; if (!field) return;
+          let v = String(val || '').trim();
+          if (field === 'expected' || field === 'actual') v = toDateTime(v);
+          if (field === 'shift') v = SHIFTS.includes(v) ? v : record.shift;
+          if (field === 'type') v = TYPES.includes(v) ? v : record.type;
+          record[field] = v;
+        });
+        record.updatedAt = Date.now();
+      });
+      persist(); renderGrid(); renderOverview();
+      show(`วางข้อมูล ${grid.length} แถวสำเร็จ`);
+    }
+    function handleGridKeydown(event) {
+      if (event.key !== 'Enter') return;
+      const target = event.target; if (!target.matches('[data-field]')) return;
+      event.preventDefault();
+      const field = target.dataset.field, tr = target.closest('tr'), nextTr = tr?.nextElementSibling;
+      if (nextTr) { const next = nextTr.querySelector(`[data-field="${field}"]`); if (next) { next.focus(); if (next.select) next.select(); } }
+      else { addGridRow(); requestAnimationFrame(() => { const newTr = $('gridBody').lastElementChild; const next = newTr?.querySelector(`[data-field="${field}"]`); if (next) next.focus(); }); }
     }
 
     function overviewRows() { const date = $('overviewDate').value, query = $('overviewSearch').value; return sortRecords(records.filter(r => (!date || r.date === date) && matches(r,query))); }
@@ -281,42 +358,77 @@
     function importCsvText(text) { return isRawSheetCsv(text) ? recordsFromSheet(text,sheetShift(text)) : importCsv(text); }
     function recordKey(row) { return [row.date,row.shift,row.order,row.barcode || row.route].map(value => String(value || '').trim().toLowerCase()).join('|'); }
     async function fetchShiftSheet(url, shift) { const response = await fetch(googleCsvUrl(url), {cache:'no-store',credentials:'omit'}); if (!response.ok) throw new Error(`Google Sheets ตอบกลับ ${response.status}`); const text = await response.text(); if (/<!doctype|<html/i.test(text.slice(0,500))) throw new Error('Google Sheets ยังไม่เผยแพร่เป็น CSV'); return recordsFromSheet(text, shift); }
-    async function syncGoogleSheets() { const links = readSheetLinks(); if (!links.s1 && !links.s2) return show('โปรดวางลิงก์ CSV ของ Google Sheets อย่างน้อย 1 กะ', 'error'); if (!saveSheetLinks()) return; const button = $('syncSheets'); const originalLabel = button.textContent; button.disabled = true; button.textContent = 'กำลังดึงข้อมูล…'; try { const tasks = [[links.s1,'16:00-01:00'],[links.s2,'22:00-07:00']].filter(([url]) => url).map(([url,shift]) => fetchShiftSheet(url,shift)); const results = await Promise.allSettled(tasks); const fetched = results.filter(result => result.status === 'fulfilled').flatMap(result => result.value); const failures = results.filter(result => result.status === 'rejected'); if (!fetched.length) throw new Error(failures.map(result => result.reason.message).join(' / ') || 'ไม่พบข้อมูล'); const existing = new Map(records.map(row => [recordKey(row),row])); let added = 0, updated = 0; fetched.forEach(incoming => { const old = existing.get(recordKey(incoming)); if (old) { Object.assign(old,{...incoming,id:old.id,updatedAt:Date.now()}); updated++; } else { records.push({...incoming,id:uid(),updatedAt:Date.now()}); added++; } }); save(); const warning = failures.length ? ` (ดึงไม่สำเร็จ ${failures.length} กะ)` : ''; show(`ดึงข้อมูลสำเร็จ: เพิ่ม ${added} รายการ, อัปเดต ${updated} รายการ${warning}`); } catch (error) { show(`เชื่อมต่อ Google Sheets ไม่สำเร็จ: ${error.message || 'ไม่ทราบสาเหตุ'}`, 'error'); } finally { button.disabled = false; button.textContent = originalLabel; } }
-    function parseBulk() { const lines = $('bulkInput').value.split(/\r?\n/).map(v => v.trim()).filter(Boolean); bulkRows = lines.map(parseLine).map(c => normalize({order:c[0],barcode:c[1],route:c[2],type:c[3] || TYPES[0],expected:toDateTime(c[4]),size:c[5],plate:c[6],driver:c[7],status:c[8] || STATUSES[0],parcel:c[9],sack:c[10],drop:c[11],actual:toDateTime(c[12])})); renderBulk(); if (!bulkRows.length && lines.length) show('ไม่พบข้อมูลที่นำเข้าได้', 'error'); }
-    function renderBulk() { $('bulkPreview').hidden = !bulkRows.length; $('bulkCount').textContent = bulkRows.length; $('bulkBody').innerHTML = bulkRows.map((r,i) => `<tr><td>${esc(r.order || '-')} ${isDD1(r.route) ? '<span class="badge warn">เสริม</span>' : ''}</td><td>${esc(r.barcode || '-')}</td><td>${esc(r.route || '-')}</td><td>${badge(r.status)}</td><td><button type="button" class="btn danger small" data-remove-bulk="${i}">ลบ</button></td></tr>`).join(''); }
+    async function syncGoogleSheets(silent = false) {
+      const links = readSheetLinks();
+      if (!links.s1 && !links.s2) { if (!silent) show('โปรดวางลิงก์ CSV ของ Google Sheets อย่างน้อย 1 กะ', 'error'); return; }
+      if (!quietSaveLinks()) { if (!silent) show('โปรดวางลิงก์ https ที่ถูกต้อง', 'error'); return; }
+      const button = $('syncSheets'); const originalLabel = button.textContent;
+      if (!silent) { button.disabled = true; button.textContent = 'กำลังดึงข้อมูล…'; }
+      try {
+        const tasks = [[links.s1,'16:00-01:00'],[links.s2,'22:00-07:00']].filter(([url]) => url).map(([url,shift]) => fetchShiftSheet(url,shift));
+        const results = await Promise.allSettled(tasks);
+        const fetched = results.filter(result => result.status === 'fulfilled').flatMap(result => result.value);
+        const failures = results.filter(result => result.status === 'rejected');
+        if (!fetched.length) throw new Error(failures.map(result => result.reason.message).join(' / ') || 'ไม่พบข้อมูล');
+        const existing = new Map(records.map(row => [recordKey(row),row]));
+        let added = 0, updated = 0;
+        fetched.forEach(incoming => { const old = existing.get(recordKey(incoming)); if (old) { Object.assign(old,{...incoming,id:old.id,updatedAt:Date.now()}); updated++; } else { records.push({...incoming,id:uid(),updatedAt:Date.now()}); added++; } });
+        save();
+        updateSyncStatus(new Date());
+        const warning = failures.length ? ` (ดึงไม่สำเร็จ ${failures.length} กะ)` : '';
+        if (!silent || added || updated) show(`ดึงข้อมูลสำเร็จ: เพิ่ม ${added} รายการ, อัปเดต ${updated} รายการ${warning}`);
+      } catch (error) {
+        updateSyncStatus(null, error.message || 'ไม่ทราบสาเหตุ');
+        if (!silent) show(`เชื่อมต่อ Google Sheets ไม่สำเร็จ: ${error.message || 'ไม่ทราบสาเหตุ'}`, 'error');
+      } finally {
+        if (!silent) { button.disabled = false; button.textContent = originalLabel; }
+      }
+    }
     function csvEscape(value) { return `"${String(value ?? '').replace(/"/g,'""')}"`; }
     function download(name, type, content) { const url = URL.createObjectURL(new Blob([content], {type})); const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 0); }
     function exportCsv() { const rows = overviewRows(); if (!rows.length) return show('ไม่มีข้อมูลตามเงื่อนไขสำหรับส่งออก', 'error'); const headers = ['ลำดับ','วันที่','กะ','บาร์โค้ดรถ','เส้นทางเดินรถ','ประเภท','เวลาที่คาดว่าจะถึง','ขนาดรถ','ทะเบียน','ชื่อพนักงานขับ','สถานะรถ','จำนวนพัสดุ','กระสอบ','จำนวนหลุด','เวลามาถึงจริง','รับเข้า','เวลาที่ต้องเปิด','เวลาที่ถึงสาย','สถานะ(รถ)']; const values = r => [r.order,r.date,r.shift,r.barcode,r.route,r.type,r.expected,r.size,r.plate,r.driver,r.status,r.parcel,r.sack,r.drop,r.actual,acceptOf(r),calcMustOpen(r.expected,r.type,r.size),lateDiffOf(r),statusCompareOf(r)]; download(`lh-truck-data-${$('overviewDate').value || 'all'}.csv`, 'text/csv;charset=utf-8', '\uFEFF' + [headers,...rows.map(values)].map(row => row.map(csvEscape).join(',')).join('\r\n')); }
     function exportJson() { if (!records.length) return show('ไม่มีข้อมูลสำหรับสำรอง', 'error'); download(`lh-truck-backup-${today()}.json`, 'application/json;charset=utf-8', JSON.stringify(records,null,2)); }
     function importCsv(text) { const lines = text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x => x.trim()); if (lines.length < 2) throw new Error('empty'); const header = parseLine(lines.shift()).map(x => x.toLowerCase()); const hasHeader = header.some(x => x.includes('บาร์โค้ด') || x === 'barcode'); const dataLines = hasHeader ? lines : [header.join(','), ...lines]; return dataLines.map(parseLine).map(c => normalize({order:c[0],date:c[1],shift:c[2],barcode:c[3],route:c[4],type:c[5],expected:toDateTime(c[6]),size:c[7],plate:c[8],driver:c[9],status:c[10],parcel:c[11],sack:c[12],drop:c[13],actual:toDateTime(c[14])})); }
     async function importFile(file) { const text = await file.text(); let imported; try { imported = file.name.toLowerCase().endsWith('.csv') ? importCsvText(text) : JSON.parse(text); if (imported && !Array.isArray(imported) && Array.isArray(imported.records)) imported = imported.records; if (!Array.isArray(imported)) throw new Error('format'); imported = imported.map(normalize); } catch { show('ไม่สามารถอ่านไฟล์ได้ โปรดเลือกไฟล์ JSON backup, CSV จากระบบ หรือ CSV ดิบจาก Google Sheets', 'error'); return; } if (!imported.length) { show('ไฟล์ไม่มีข้อมูลสำหรับนำเข้า', 'error'); return; } const replace = confirm(`พบ ${imported.length} รายการ\nกด “ตกลง” เพื่อแทนที่ข้อมูลเดิมทั้งหมด\nกด “ยกเลิก” เพื่อรวมกับข้อมูลเดิม`); if (replace) records = imported; else { const existing = new Set(records.map(r => r.id)); imported.forEach(r => { if (existing.has(r.id)) r.id = uid(); records.push(r); }); } save(); show(`นำเข้าข้อมูล ${imported.length} รายการสำเร็จ`); }
-    function bindActions() { document.addEventListener('click', event => { const editButton = event.target.closest('[data-edit]'), deleteButton = event.target.closest('[data-delete]'), removeBulkButton = event.target.closest('[data-remove-bulk]'); if (editButton) edit(editButton.dataset.edit); if (deleteButton) remove(deleteButton.dataset.delete); if (removeBulkButton) { bulkRows.splice(Number(removeBulkButton.dataset.removeBulk), 1); renderBulk(); } }); document.addEventListener('change', event => { if (event.target.matches('[data-status-id]')) updateStatus(event.target.dataset.statusId,event.target.value); }); }
+    function bindActions() {
+      document.addEventListener('click', event => {
+        const editButton = event.target.closest('[data-edit]'), deleteButton = event.target.closest('[data-delete]'), gridDeleteButton = event.target.closest('[data-grid-delete]');
+        if (editButton) edit(editButton.dataset.edit);
+        if (deleteButton) remove(deleteButton.dataset.delete);
+        if (gridDeleteButton) remove(gridDeleteButton.dataset.gridDelete);
+      });
+      document.addEventListener('change', event => {
+        if (event.target.matches('[data-status-id]')) updateStatus(event.target.dataset.statusId,event.target.value);
+        else if (event.target.matches('#gridBody [data-field]')) commitCell(event.target.dataset.id, event.target.dataset.field, event.target.value);
+      });
+      $('gridBody').addEventListener('paste', handleGridPaste);
+      $('gridBody').addEventListener('keydown', handleGridKeydown);
+    }
 
     function init() {
-      selectOptions($('fShift')); selectOptions($('bShift')); selectOptions($('listShift'),true); statusOptions($('fStatus'));
+      selectOptions($('gridShift'));
       load();
       const sheetLinks = loadSheetLinks(); $('sheetUrlS1').value = sheetLinks.s1; $('sheetUrlS2').value = sheetLinks.s2;
-      resetForm(); $('bDate').value = today(); $('overviewDate').value = today();
+      ['sheetUrlS1','sheetUrlS2'].forEach(id => { $(id).addEventListener('input', autoSyncOnEdit); $(id).addEventListener('change', autoSyncOnEdit); });
+      $('autoSync').addEventListener('change', restartAutoSyncTimer);
+      if (sheetLinks.s1 || sheetLinks.s2) syncGoogleSheets(true);
+      restartAutoSyncTimer();
+      $('gridDate').value = today(); $('gridShift').value = SHIFTS[0]; $('overviewDate').value = today();
       bindActions();
       document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
-      $('recordForm').addEventListener('submit', event => { event.preventDefault(); const item = formData(); if (!item.barcode && !item.route) return show('กรุณากรอกบาร์โค้ดหรือเส้นทางเดินรถ', 'error'); const index = records.findIndex(r => r.id === editingId); if (index >= 0) { records[index] = item; show('แก้ไขข้อมูลสำเร็จ'); } else { records.push(item); show('บันทึกข้อมูลสำเร็จ'); } save(); resetForm(); });
-      $('cancelEdit').addEventListener('click', resetForm);
-      ['listDate','listShift'].forEach(id => $(id).addEventListener('change',renderList));
-      $('listSearch').addEventListener('input',renderList);
-      $('listClear').addEventListener('click',() => { $('listDate').value = ''; $('listShift').value = ''; $('listSearch').value = ''; renderList(); });
+      $('gridDate').addEventListener('change',renderGrid);
+      $('gridShift').addEventListener('change',renderGrid);
+      $('gridSearch').addEventListener('input',renderGrid);
+      $('addRow').addEventListener('click',addGridRow);
       $('overviewDate').addEventListener('change',renderOverview);
       $('overviewSearch').addEventListener('input',renderOverview);
       $('overviewClear').addEventListener('click',() => { $('overviewDate').value = ''; $('overviewSearch').value = ''; renderOverview(); });
-      $('saveSheetLinks').addEventListener('click',saveSheetLinks);
-      $('syncSheets').addEventListener('click',syncGoogleSheets);
-      $('parseBulk').addEventListener('click',parseBulk);
-      $('clearBulk').addEventListener('click',() => { $('bulkInput').value = ''; bulkRows = []; renderBulk(); });
-      $('saveBulk').addEventListener('click',() => { if (!bulkRows.length) return; const date = $('bDate').value || today(), shift = $('bShift').value; const rows = bulkRows.filter(r => r.barcode || r.route).map(r => ({...r,id:uid(),date,shift,updatedAt:Date.now()})); if (!rows.length) return show('โปรดระบุบาร์โค้ดหรือเส้นทางอย่างน้อย 1 รายการ', 'error'); records.push(...rows); save(); bulkRows = []; $('bulkInput').value = ''; renderBulk(); show(`บันทึก ${rows.length} รายการสำเร็จ`); });
+      $('syncSheets').addEventListener('click',() => syncGoogleSheets(false));
       $('exportCsv').addEventListener('click',exportCsv);
       $('exportJson').addEventListener('click',exportJson);
       $('importButton').addEventListener('click',() => $('importFile').click());
       $('importFile').addEventListener('change',async event => { const file = event.target.files[0]; if (file) await importFile(file); event.target.value = ''; });
-      renderList(); renderOverview();
+      renderGrid(); renderOverview();
     }
     init();
   })();
